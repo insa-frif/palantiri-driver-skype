@@ -38,6 +38,7 @@
     "bluebird": "^3.2.1",
     "incident": "^1.0.5",
     "lodash": "^4.0.0",
-    "palantiri-interfaces": "^0.3.2"
+    "palantiri-interfaces": "^0.3.2",
+    "skype-http": "0.0.6"
   }
 }
