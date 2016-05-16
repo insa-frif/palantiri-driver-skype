@@ -1,0 +1,43 @@
+{
+  "name": "palantiri-driver-skype",
+  "version": "0.1.3",
+  "description": "Palantiri driver for Skype",
+  "main": "dist/node/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/insa-frif/palantiri-driver-skype.git"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "chat",
+    "skype"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "del": "^2.2.0",
+    "graceful-fs": "^4.1.3",
+    "gulp": "^3.9.1",
+    "jquery": "^2.2.1",
+    "typescript": "^1.8.10",
+    "via-build-tools": "^0.8.2",
+    "palantiri-test": "^0.1.2"
+  },
+  "jspm": {
+    "configFile": "systemjs.config.js",
+    "dependencies": {
+      "crypto": "github:jspm/nodelibs-crypto@^0.1.0",
+      "lodash": "npm:lodash@^4.0.0"
+    },
+    "devDependencies": {}
+  },
+  "dependencies": {
+    "bluebird": "^3.2.1",
+    "incident": "^1.0.5",
+    "lodash": "^4.0.0",
+    "palantiri-interfaces": "^0.3.2"
+  }
+}

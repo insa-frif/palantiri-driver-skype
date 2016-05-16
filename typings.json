@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.3.4+20160411163813",
+    "facebook-chat-api": "registry:npm/facebook-chat-api#1.1.0+20160427041941",
+    "incident": "npm:incident",
+    "lodash": "registry:npm/lodash#4.0.0+20160416211519",
+    "markdown-it": "registry:npm/markdown-it#4.0.0+20160323212212",
+    "palantiri-interfaces": "npm:palantiri-interfaces",
+    "palantiri-test": "npm:palantiri-test"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160415060238"
+  },
+  "ambientDependencies": {},
+  "ambientDevDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160412142033"
+  }
+}
