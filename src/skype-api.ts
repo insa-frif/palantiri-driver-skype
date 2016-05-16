@@ -29,12 +29,29 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
     };
 
     this.nativeApi.on("Text", this.handleMessageEvent.bind(this));
+    this.nativeApi.on("RichText", this.handleMessageEvent.bind(this));
   }
 
   protected handleMessageEvent (nativeEvent: any) {
-    // let event: Pltr.Api.events.MessageEvent;
-    // event = {};
-    // this.emit(Pltr.Api.events.MESSAGE, event);
+    let event: Pltr.Api.events.MessageEvent;
+
+    event = {
+      type: Pltr.Api.events.MESSAGE,
+      message: {
+        id: String(nativeEvent.id), // How to deal with with the clientMessageId ?
+        driverName: DRIVER_NAME,
+        author: null, // TODO
+        body: nativeEvent.content,
+        content: nativeEvent.content,
+        flags: 0,
+        creationDate: nativeEvent.composeTime,
+        lastUpdated: null,
+        driverData: nativeEvent
+      },
+      discussionGlobalId: Pltr.Id.stringifyReference({driverName: DRIVER_NAME, id: String(nativeEvent.conversation)})
+    };
+
+    this.emit(Pltr.Api.events.MESSAGE, event);
   }
 
   addMembersToDiscussion(members: Array<Pltr.AccountReference | Pltr.AccountGlobalId>, discussion: Pltr.DiscussionReference | Pltr.DiscussionGlobalId, options?: any): Bluebird<this> {
@@ -83,6 +100,14 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
   }
 
   sendMessage(message: Pltr.Api.NewMessage, discussion: Pltr.DiscussionReference | Pltr.DiscussionGlobalId, options?: any): Bluebird<Pltr.Message> {
-    return Bluebird.reject(new Incident("todo", "sendMessage is not implemented yet"));
+    return Bluebird
+      .try(() => {
+        let discussionRef = Pltr.Id.asReference(discussion, DRIVER_NAME);
+        let skypeMessage: skypeHttp.Api.NewMessage = {
+          textContent: message.body
+        };
+        return this.nativeApi.sendMessage(skypeMessage, discussionRef.id);
+      })
+      .thenReturn(null);
   }
 }

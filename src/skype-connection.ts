@@ -60,11 +60,12 @@ export class SkypeConnection extends EventEmitter implements palantiri.Connectio
     }
 
     return Bluebird.resolve(skypeHttp.connect({credentials: this.options.credentials}))
-      .then((nativeApi) => {
+      .then((nativeApi: skypeHttp.Api) => {
         this.connectionState = ConnectionState.CONNECTED;
         this.api = new SkypeApi(nativeApi, this.options.credentials.username, this);
         this.emit(palantiri.Connection.events.CONNECTED, this);
-        return this.api;
+        return Bluebird.resolve(nativeApi.listen())
+          .thenReturn(this.api);
       });
   }
 

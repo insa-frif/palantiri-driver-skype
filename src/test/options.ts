@@ -7,20 +7,21 @@ export function getOptions(): Bluebird<any> {
     output: process.stdout
   });
 
-  let credentials: any = {};
+
+  let username: string = null;
+  let password: string = null;
 
   return Bluebird.fromCallback((cb) => {
       rl.question("Username: ", (res) => cb(null, res));
     })
     .then((email: string) => {
-      credentials.email = email;
+      username = email;
       return Bluebird.fromCallback((cb) => {
         rl.question("Password: ", (res) => cb(null, res));
       })
     })
     .then((password: string) => {
-      credentials.password = password;
-      console.log(credentials);
-      return {credentials: credentials};
+      password = password;
+      return {credentials: {username: username, password: password}};
     });
 }
