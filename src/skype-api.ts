@@ -1,6 +1,6 @@
 import * as Bluebird from "bluebird";
 import {EventEmitter} from "events";
-import Incident from "incident";
+import {Incident} from "incident";
 import * as _ from "lodash";
 import * as Pltr from "palantiri-interfaces";
 import * as skypeHttp from "skype-http";

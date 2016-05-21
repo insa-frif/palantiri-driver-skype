@@ -1,7 +1,7 @@
 import * as skypeHttp from "skype-http";
 import * as Bluebird from "bluebird";
 import {EventEmitter} from "events";
-import Incident from "incident";
+import {Incident} from "incident";
 import * as palantiri from "palantiri-interfaces";
 
 import {SkypeApi} from "./skype-api";
