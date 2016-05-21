@@ -1,6 +1,6 @@
 {
   "name": "palantiri-driver-skype",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Palantiri driver for Skype",
   "main": "dist/node/main.js",
   "repository": {
@@ -20,7 +20,7 @@
     "bluebird": "^3.2.1",
     "incident": "^1.0.5",
     "lodash": "^4.0.0",
-    "palantiri-interfaces": "^0.3.3",
+    "palantiri-interfaces": "^0.3.4",
     "skype-http": "0.0.6"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "graceful-fs": "^4.1.3",
     "gulp": "^3.9.1",
     "jquery": "^2.2.1",
-    "palantiri-test": "^0.1.3",
+    "palantiri-test": "^0.1.4",
     "typescript": "^1.9.0-dev.20160521-1.0",
     "via-build-tools": "^0.9.0"
   }
