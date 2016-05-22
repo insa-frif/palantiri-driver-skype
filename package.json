@@ -21,7 +21,7 @@
     "incident": "^1.0.5",
     "lodash": "^4.0.0",
     "palantiri-interfaces": "^0.3.4",
-    "skype-http": "0.0.6"
+    "skype-http": "0.0.7"
   },
   "devDependencies": {
     "chai": "^3.4.1",
