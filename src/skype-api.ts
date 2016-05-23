@@ -71,7 +71,7 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
   }
 
   getCurrentUser(): Bluebird<Pltr.UserAccount> {
-    return Bluebird.reject(new Incident("todo", "getCurrentUser is not implemented yet"));
+    return Bluebird.resolve(this.user);
   }
 
   /**
