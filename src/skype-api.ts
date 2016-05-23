@@ -9,6 +9,16 @@ import {SkypeConnection} from "./skype-connection";
 
 const DRIVER_NAME: string = "skype";
 
+function mapContactToAccount (contact: skypeHttp.Contact): Pltr.Account  {
+  return {
+    driverName: DRIVER_NAME,
+    id: contact.id,
+    name: String((contact.name && contact.name.nickname) || contact.id),
+    avatarUrl: contact.avatar_url,
+    driverData: contact
+  }
+}
+
 export class SkypeApi extends EventEmitter implements Pltr.Api {
   nativeApi: skypeHttp.Api;
   connection: SkypeConnection = null;
@@ -67,7 +77,11 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
   }
 
   getContacts(options?: any): Bluebird<Pltr.Account[]> {
-    return Bluebird.reject(new Incident("todo", "getContacts is not implemented yet"));
+    return Bluebird
+      .try(() => {
+        return this.nativeApi.getContacts()
+      })
+      .map(mapContactToAccount);
   }
 
   getCurrentUser(): Bluebird<Pltr.UserAccount> {
