@@ -19,6 +19,28 @@ function mapContactToAccount (contact: skypeHttp.Contact): Pltr.Account  {
   }
 }
 
+function mapDiscussion (discussion: skypeHttp.Conversation): Pltr.Discussion {
+  return {
+    id: discussion.id,
+    driverName: DRIVER_NAME,
+    creationDate: null, // TODO
+    name: (discussion.threadProperties && discussion.threadProperties.topic) || null,
+    description: null,
+    isPrivate: true,
+    participants: [],
+    owner: null,
+    authorizations: {
+      write: true,
+      talk: true,
+      video: true,
+      invite: true,
+      kick: false,
+      ban: false
+    },
+    driverData: discussion
+  }
+}
+
 export class SkypeApi extends EventEmitter implements Pltr.Api {
   nativeApi: skypeHttp.Api;
   connection: SkypeConnection = null;
@@ -97,8 +119,17 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
     return Bluebird.reject(new Incident("todo", "getDiscussion is not implemented yet"));
   }
 
-  getDiscussions(options?: Pltr.Api.GetDiscussionsOptions): Bluebird<Pltr.Discussion[]> {
-    return Bluebird.reject(new Incident("todo", "getDiscussions is not implemented yet"));
+  getDiscussions (options?: Pltr.Api.GetDiscussionsOptions): Bluebird<Pltr.Discussion[]> {
+    return Bluebird
+      .try(() => {
+        return this.nativeApi.getConversations()
+      })
+      .map(mapDiscussion)
+      .map((discussion: Pltr.Discussion) => {
+        // TODO: load participants
+        discussion.participants = [];
+        return discussion;
+      });
   }
 
   getMessagesFromDiscussion(discussion: Pltr.DiscussionReference | Pltr.DiscussionGlobalId, options?: Pltr.Api.GetMessagesFromDiscussionOptions): Bluebird<Pltr.Message[]> {
