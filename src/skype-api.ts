@@ -124,11 +124,37 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
       .try(() => {
         return this.nativeApi.getConversations()
       })
-      .map(mapDiscussion)
-      .map((discussion: Pltr.Discussion) => {
-        // TODO: load participants
-        discussion.participants = [];
-        return discussion;
+      .map((discussion: skypeHttp.Conversation) => {
+        let pltrDiscu = mapDiscussion(discussion);
+        let members: Bluebird<string[]>;
+
+        if (discussion.members) {
+          members = Bluebird.resolve(discussion.members);
+        } else {
+          members = Bluebird
+            .try(() => {
+              return this.nativeApi.getConversation(discussion.id);
+            })
+            .then((conversation: skypeHttp.Conversation) => {
+              return conversation.members || [];
+            });
+        }
+
+        return members
+          .map((memberId: string) => {
+            let pltrMember: Pltr.Account = {
+              driverName: DRIVER_NAME,
+              id: memberId,
+              name: memberId,
+              avatarUrl: null,
+              driverData: {id: memberId}
+            };
+            return pltrMember;
+          })
+          .then((members: Pltr.Account[]) => {
+            pltrDiscu.participants = members;
+            return pltrDiscu;
+          })
       });
   }
 
