@@ -216,6 +216,20 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
         };
         return this.nativeApi.sendMessage(skypeMessage, discussionRef.id);
       })
-      .thenReturn(null);
+      .then((result: skypeHttp.Api.SendMessageResult) => {
+        let pltrMessage: Pltr.Message;
+        pltrMessage = {
+          driverName: DRIVER_NAME,
+          id: result.clientMessageId,
+          author: null,
+          body: result.textContent,
+          content: result.textContent,
+          flags: 0,
+          creationDate: new Date(result.arrivalTime),
+          lastUpdated: new Date(result.arrivalTime),
+          driverData: result
+        };
+        return pltrMessage;
+      });
   }
 }
