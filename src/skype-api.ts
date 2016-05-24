@@ -12,7 +12,7 @@ const DRIVER_NAME: string = "skype";
 function mapContactToAccount (contact: skypeHttp.Contact): Pltr.Account  {
   return {
     driverName: DRIVER_NAME,
-    id: contact.id,
+    id: "8:" + contact.id, // temporary hack to get the prefixed id (8: means "human")
     name: String((contact.name && contact.name.nickname) || contact.id),
     avatarUrl: contact.avatar_url,
     driverData: contact
@@ -91,11 +91,55 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
   }
 
   createDiscussion(members: Array<Pltr.AccountReference | Pltr.AccountGlobalId>, options?: Pltr.Api.CreateDiscussionOptions): Bluebird<Pltr.Discussion> {
-    return Bluebird.reject(new Incident("todo", "createDiscussion is not implemented yet"));
+    let discussionPromise: Bluebird<Pltr.Discussion>;
+
+    if ((!Array.isArray(members)) || members.length === 0) {
+      discussionPromise = Bluebird.reject(new Incident("no-members", "Unable to create discussion, no members provided"));
+    } else if (members.length === 1) {
+      discussionPromise = Bluebird.try(() => {
+        return this.getAccount (members[0])
+          .then((account: Pltr.Account) => {
+            let pltrDiscu: Pltr.Discussion;
+            pltrDiscu = {
+              id: account.id,
+              driverName: DRIVER_NAME,
+              creationDate: null, // TODO
+              name: account.name,
+              description: null,
+              isPrivate: true,
+              participants: [account],
+              owner: null,
+              authorizations: {
+                write: true,
+                talk: true,
+                video: true,
+                invite: true,
+                kick: false,
+                ban: false
+              },
+              driverData: {}
+            };
+            return pltrDiscu;
+          });
+      });
+    } else {
+      discussionPromise = Bluebird.reject(new Incident("todo", "createDiscussion does not support group discussions yet"));
+    }
+    return discussionPromise;
   }
 
   getAccount(account: Pltr.AccountReference | Pltr.AccountGlobalId): Bluebird<Pltr.Account> {
-    return Bluebird.reject(new Incident("todo", "getAccount is not implemented yet"));
+    return Bluebird.try(() => {
+      let ref = Pltr.Id.asReference(account, DRIVER_NAME);
+      let pltrMember: Pltr.Account = {
+        driverName: DRIVER_NAME,
+        id: ref.id,
+        name: ref.id,
+        avatarUrl: null,
+        driverData: {id: ref.id}
+      };
+      return pltrMember;
+    });
   }
 
   getContacts(options?: any): Bluebird<Pltr.Account[]> {
@@ -142,14 +186,7 @@ export class SkypeApi extends EventEmitter implements Pltr.Api {
 
         return members
           .map((memberId: string) => {
-            let pltrMember: Pltr.Account = {
-              driverName: DRIVER_NAME,
-              id: memberId,
-              name: memberId,
-              avatarUrl: null,
-              driverData: {id: memberId}
-            };
-            return pltrMember;
+            return this.getAccount({driverName: DRIVER_NAME, id: memberId});
           })
           .then((members: Pltr.Account[]) => {
             pltrDiscu.participants = members;
